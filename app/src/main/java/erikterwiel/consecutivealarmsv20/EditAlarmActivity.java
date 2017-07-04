@@ -229,12 +229,12 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         updateUI();
     }
 
-    @Override
+/*    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();
         mi.inflate();
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 
     // Sets times when time is picked
     @Override
