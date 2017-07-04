@@ -59,7 +59,7 @@ public class AlarmListActivity extends AppCompatActivity {
             }
         });
 
-        // Setup for alarm list
+        // Setup for alarm list RecyclerView
         mAlarms = new ArrayList<Alarm>();
         for (int i = 0; i < 3; i++) {
             mAlarms.add(new Alarm());

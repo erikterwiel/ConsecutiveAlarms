@@ -15,7 +15,7 @@ import java.util.UUID;
  * Created by Erik on 6/22/2017.
  */
 
-public class Alarm implements Serializable{
+public class Alarm implements Serializable {
 
     // Lists object variables
     private String mLabel;
@@ -151,6 +151,26 @@ public class Alarm implements Serializable{
         mAlarmVibrate.add(toAdd);
     }
 
+    public List<String> getAlarmNames() {
+        return mAlarmNames;
+    }
+
+    public boolean getAlarmVibrate(int position) {
+        return mAlarmVibrate.get(position);
+    }
+
+    public void setAlarmName(int position, String toSet) {
+        mAlarmNames.set(position, toSet);
+    }
+
+    public void setAlarmUri(int position, String toSet) {
+        mAlarmUris.set(position, toSet);
+    }
+
+    public void setAlarmVibrate(int position, boolean vibrate) {
+        mAlarmVibrate.set(position, vibrate);
+    }
+
     // Generated getters and setters
     public String getLabel() {
         return mLabel;
@@ -166,6 +186,7 @@ public class Alarm implements Serializable{
 
     public void setFromHour(int fromHour) {
         mFromHour = fromHour;
+        Log.i("Alarm.java", "From hour set to " + Integer.toString(fromHour));
     }
 
     public int getFromMinute() {
@@ -174,6 +195,7 @@ public class Alarm implements Serializable{
 
     public void setFromMinute(int fromMinute) {
         mFromMinute = fromMinute;
+        Log.i("Alarm.java", "From minute set to " + Integer.toString(fromMinute));
     }
 
     public int getToHour() {
@@ -182,6 +204,7 @@ public class Alarm implements Serializable{
 
     public void setToHour(int toHour) {
         mToHour = toHour;
+        Log.i("Alarm.java", "To hour set to " + Integer.toString(toHour));
     }
 
     public int getToMinute() {
@@ -190,6 +213,7 @@ public class Alarm implements Serializable{
 
     public void setToMinute(int toMinute) {
         mToMinute = toMinute;
+        Log.i("Alarm.java", "To minute set to " + Integer.toString(toMinute));
     }
 
     public int getNumAlarms() {

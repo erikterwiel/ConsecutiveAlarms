@@ -4,12 +4,19 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +33,8 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.List;
+
 /**
  * Created by Erik on 6/22/2017.
  */
@@ -35,12 +44,14 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
     // Creating unique extras
     private static final String EXTRA_ALARM_TO = "erikterwiel.consecutivealarmsv20.extra_alarm_to";
     private static final String EXTRA_ALARM_FROM = "erikterwiel.consecutivealarmsv20.extra_alarm_from";
-    private static final int EXTRA_DIALOG_ID = 00000001;
+    private static final int EXTRA_RINGTONE_PICKER_ID = 999;
 
     // Lists functionality variables
     private Alarm mAlarm;
-    //private AlarmAdapter mAlarmAdapter;
+    private AlarmAdapter mAlarmAdapter;
     private boolean mIsFrom;
+    private int mPosition;
+
 
     // Lists GUI variables
     private MenuItem mDoneButton;
@@ -212,6 +223,17 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
                 mAlarm.setSaturday(isChecked);
             }
         });
+
+        // Sets up alarm RecyclerView
+        mAlarmList.setLayoutManager(new LinearLayoutManager(this));
+        updateUI();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater mi = getMenuInflater();
+        mi.inflate();
+        return super.onCreateOptionsMenu(menu);
     }
 
     // Sets times when time is picked
@@ -269,8 +291,88 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         }
     }
 
+    // Needed for RecyclerView
     public void updateUI() {
+        mAlarmAdapter = new AlarmAdapter(mAlarm);
+        mAlarmList.setAdapter(mAlarmAdapter);
+    }
 
+    private class AlarmAdapter extends RecyclerView.Adapter<AlarmHolder> {
+        private List<String> mAlarmNames;
+
+        public AlarmAdapter(Alarm alarm) {
+            mAlarmNames = alarm.getAlarmNames();
+        }
+
+        @Override
+        public AlarmHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(EditAlarmActivity.this);
+            View view = layoutInflater.inflate(R.layout.alarm_list_item_alarm, parent, false);
+            return new EditAlarmActivity.AlarmHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(AlarmHolder holder, int position)  {
+            String alarmName = mAlarmNames.get(position);
+            holder.bindAlarm(alarmName);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mAlarmNames.size();
+        }
+    }
+
+    private class AlarmHolder extends RecyclerView.ViewHolder  {
+        private LinearLayout mLayoutButton;
+        private CheckBox  mVibrateButton;
+        private TextView mAlarmNameView;
+
+        public AlarmHolder(View itemView) {
+            super(itemView);
+            mLayoutButton = (LinearLayout) itemView.findViewById(R.id.alarm_list_item_click_layout);
+            mVibrateButton = (CheckBox) itemView.findViewById(R.id.alarm_list_item_check);
+            mAlarmNameView = (TextView) itemView.findViewById(R.id.alarm_list_item_ringname);
+        }
+
+        public void bindAlarm(String alarmName) {
+            mAlarmNameView.setText(alarmName);
+            if (mAlarm.getAlarmVibrate(getLayoutPosition())) {
+                mVibrateButton.setChecked(true);
+            }
+            mVibrateButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mAlarm.setAlarmVibrate(getLayoutPosition(), isChecked);
+                }
+            });
+            mLayoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPosition = getLayoutPosition();
+                    Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select alarm tone");
+                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+                    startActivityForResult(intent, EXTRA_RINGTONE_PICKER_ID);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            Ringtone ringtone =  RingtoneManager.getRingtone(this, uri);
+            String name = ringtone.getTitle(this);
+            mAlarm.setAlarmName(mPosition, name);
+            mAlarm.setAlarmUri(mPosition, uri.toString());
+            Log.i("EditAlarmActivity.java", "Name of uri added with name " + name);
+            Log.i("EditAlarmActivity.java", "Uri added with name " + uri.toString());
+            updateUI();
+        }
     }
 
     // Simplifies sending alarm objects through intents

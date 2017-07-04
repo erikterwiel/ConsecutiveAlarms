@@ -3,4 +3,6 @@
     <string name="time_am">AM</string>
     <string name="time_pm">PM</string>
     <string name="alarms">Alarms</string>
+    <string name="alarm_list_vibrate">Vibrate</string>
+    <string name="edit_alarm_activity_label">Edit Alarm</string>
 </resources>
