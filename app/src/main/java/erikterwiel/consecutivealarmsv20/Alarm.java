@@ -83,7 +83,36 @@ public class Alarm implements Serializable{
     // Converts time data to usable strings
     public static Time getTime(int hour, int minute) {
         Time time = new Time();
-        if (hour < 13) {
+        if (hour == 0 || hour == 24) {
+            time.setMorning("AM");
+            if (minute < 10) {
+                time.setTime("12:0" + Integer.toString(minute));
+                Log.i("Alarm.java", "12:0" + Integer.toString(minute) + "AM converted");
+            } else {
+                time.setTime("12:" + Integer.toString(minute));
+                Log.i("Alarm.java", "12:" + Integer.toString(minute) + "AM converted");
+            }
+        } else if (hour ==  12) {
+            time.setMorning("PM");
+            if (minute < 10) {
+                time.setTime("12:0" + Integer.toString(minute));
+                Log.i("Alarm.java", "12:0" + Integer.toString(minute) + "PM converted");
+            } else {
+                time.setTime("12:" + Integer.toString(minute));
+                Log.i("Alarm.java", "12:" + Integer.toString(minute) + "PM converted");
+            }
+        } else if (hour < 0) {
+            time.setMorning("PM");
+            if (minute < 10) {
+                time.setTime(Integer.toString(hour + 12) + ":0" + Integer.toString(minute));
+                Log.i("Alarm.java", Integer.toString(hour + 12) + ":0" + Integer.toString(minute) +
+                        "AM converted");
+            } else {
+                time.setTime(Integer.toString(hour + 12) + ":" + Integer.toString(minute));
+                Log.i("Alarm.java", Integer.toString(hour + 12) + ":" + Integer.toString(minute) +
+                        "AM converted");
+            }
+        } else if (hour < 13) {
             time.setMorning("AM");
             if (minute < 10) {
                 time.setTime(Integer.toString(hour) + ":0" + Integer.toString(minute));
@@ -98,11 +127,11 @@ public class Alarm implements Serializable{
             time.setMorning("PM");
             if (minute < 10) {
                 time.setTime(Integer.toString(hour - 12) + ":0" + Integer.toString(minute));
-                Log.i("Alarm.java", Integer.toString(hour) + ":0" + Integer.toString(minute) +
+                Log.i("Alarm.java", Integer.toString(hour - 12) + ":0" + Integer.toString(minute) +
                         "PM converted");
             } else {
                 time.setTime(Integer.toString(hour - 12) + ":" + Integer.toString(minute));
-                Log.i("Alarm.java", Integer.toString(hour) + ":" + Integer.toString(minute) +
+                Log.i("Alarm.java", Integer.toString(hour - 12) + ":" + Integer.toString(minute) +
                         "PM converted");
             }
         }
