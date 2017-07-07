@@ -3,4 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="background_material_dark">#303030</color>
+    <color name="primary_material_dark">#212121</color>
+    <color name="accent_material_dark">#80cbc4</color>
+    <color name="consec_alarm_accent">#b71c1c</color>
+    <color name="accent_material_dark_1">#80cbc4</color>
+    <color name="ca_primary">#263238</color>
+    <color name="ca_background">#263238</color>
+    <color name="ca_accent">#f44336</color>
+    <color name="ca_navbar">#212121</color>
+    <color name="ca_statusbar">#212121</color>
 </resources>

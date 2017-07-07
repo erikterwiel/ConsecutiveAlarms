@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Theme.ConsecutiveAlarms" parent="Theme.AppCompat">
+        <item name="android:colorBackground">@color/ca_background</item>
+        <item name="colorAccent">@color/ca_accent</item>
+        <item name="colorPrimary">@color/ca_primary</item>
+        <item name="android:navigationBarColor">@color/ca_navbar</item>
+        <item name="android:statusBarColor">@color/ca_statusbar</item>
+    </style>
+
 </resources>

@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:padding="4dp"
         android:layout_marginBottom="4dp"
-        android:src="@drawable/ic_trending_flat_black54_48dp"
+        android:src="@drawable/ic_trending_flat_white_48dp"
         android:adjustViewBounds="true"
         android:maxHeight="30dp"
         android:maxWidth="30dp"

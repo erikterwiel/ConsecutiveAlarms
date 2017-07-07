@@ -24,9 +24,7 @@ public class Alarm implements Serializable {
     private int mToHour;
     private int mToMinute;
     private int mNumAlarms;
-    private List<String> mAlarmIDs;
-    private List<Integer> mAlarmHours;
-    private List<Integer> mAlarmMins;
+    private List<Integer> mAlarmIDs;
     private List<String> mAlarmNames;
     private List<String> mAlarmUris;
     private List<Boolean> mAlarmVibrate;
@@ -46,9 +44,7 @@ public class Alarm implements Serializable {
         mToHour = 7;
         mToMinute = 30;
         mNumAlarms = 3;
-        mAlarmIDs = new ArrayList<String>();
-        mAlarmHours = new ArrayList<Integer>();
-        mAlarmMins =  new ArrayList<Integer>();
+        mAlarmIDs = new ArrayList<Integer>();
         mAlarmNames = new ArrayList<String>();
         mAlarmUris = new ArrayList<String>();
         mAlarmVibrate = new ArrayList<Boolean>();
@@ -62,11 +58,32 @@ public class Alarm implements Serializable {
         mOn = false;
     }
 
-    // Generates unique ID for each alarm
-    public static String getID() {
-        String uuid = UUID.randomUUID().toString();
-        Log.i("Alarm.java", "UUID " + uuid + " created");
-        return uuid;
+    public void setAlarm() {
+
+    }
+
+    public void cancelAlarm() {
+
+    }
+
+    public void resize(int newSize, Context context) {
+        ArrayList<String> tempAlarmNames = new ArrayList<String>();
+        ArrayList<String> tempAlarmUris = new ArrayList<String>();
+        ArrayList<Boolean> tempAlarmVibrate = new ArrayList<Boolean>();
+        for (int i = 0;  i < newSize; i++) {
+            if (i < mAlarmNames.size()) {
+                tempAlarmNames.add(mAlarmNames.get(i));
+                tempAlarmUris.add(mAlarmUris.get(i));
+                tempAlarmVibrate.add(mAlarmVibrate.get(i));
+            } else {
+                tempAlarmNames.add(Alarm.getDefaultName(context));
+                tempAlarmUris.add(Alarm.getDefaultUri());
+                tempAlarmVibrate.add(false);
+            }
+        }
+        mAlarmNames = tempAlarmNames;
+        mAlarmUris = tempAlarmUris;
+        mAlarmVibrate = tempAlarmVibrate;
     }
 
     // Returns default Uri Name
@@ -87,51 +104,51 @@ public class Alarm implements Serializable {
             time.setMorning("AM");
             if (minute < 10) {
                 time.setTime("12:0" + Integer.toString(minute));
-                Log.i("Alarm.java", "12:0" + Integer.toString(minute) + "AM converted");
+                Log.i("Info", "12:0" + Integer.toString(minute) + "AM converted");
             } else {
                 time.setTime("12:" + Integer.toString(minute));
-                Log.i("Alarm.java", "12:" + Integer.toString(minute) + "AM converted");
+                Log.i("Info", "12:" + Integer.toString(minute) + "AM converted");
             }
         } else if (hour ==  12) {
             time.setMorning("PM");
             if (minute < 10) {
                 time.setTime("12:0" + Integer.toString(minute));
-                Log.i("Alarm.java", "12:0" + Integer.toString(minute) + "PM converted");
+                Log.i("Info", "12:0" + Integer.toString(minute) + "PM converted");
             } else {
                 time.setTime("12:" + Integer.toString(minute));
-                Log.i("Alarm.java", "12:" + Integer.toString(minute) + "PM converted");
+                Log.i("Info", "12:" + Integer.toString(minute) + "PM converted");
             }
         } else if (hour < 0) {
             time.setMorning("PM");
             if (minute < 10) {
                 time.setTime(Integer.toString(hour + 12) + ":0" + Integer.toString(minute));
-                Log.i("Alarm.java", Integer.toString(hour + 12) + ":0" + Integer.toString(minute) +
+                Log.i("Info", Integer.toString(hour + 12) + ":0" + Integer.toString(minute) +
                         "AM converted");
             } else {
                 time.setTime(Integer.toString(hour + 12) + ":" + Integer.toString(minute));
-                Log.i("Alarm.java", Integer.toString(hour + 12) + ":" + Integer.toString(minute) +
+                Log.i("Info", Integer.toString(hour + 12) + ":" + Integer.toString(minute) +
                         "AM converted");
             }
         } else if (hour < 13) {
             time.setMorning("AM");
             if (minute < 10) {
                 time.setTime(Integer.toString(hour) + ":0" + Integer.toString(minute));
-                Log.i("Alarm.java", Integer.toString(hour) + ":0" + Integer.toString(minute) +
+                Log.i("Info", Integer.toString(hour) + ":0" + Integer.toString(minute) +
                         "AM converted");
             } else {
                 time.setTime(Integer.toString(hour) + ":" + Integer.toString(minute));
-                Log.i("Alarm.java", Integer.toString(hour) + ":" + Integer.toString(minute) +
+                Log.i("Info", Integer.toString(hour) + ":" + Integer.toString(minute) +
                         "AM converted");
             }
         } else {
             time.setMorning("PM");
             if (minute < 10) {
                 time.setTime(Integer.toString(hour - 12) + ":0" + Integer.toString(minute));
-                Log.i("Alarm.java", Integer.toString(hour - 12) + ":0" + Integer.toString(minute) +
+                Log.i("Info", Integer.toString(hour - 12) + ":0" + Integer.toString(minute) +
                         "PM converted");
             } else {
                 time.setTime(Integer.toString(hour - 12) + ":" + Integer.toString(minute));
-                Log.i("Alarm.java", Integer.toString(hour - 12) + ":" + Integer.toString(minute) +
+                Log.i("Info", Integer.toString(hour - 12) + ":" + Integer.toString(minute) +
                         "PM converted");
             }
         }
@@ -151,6 +168,12 @@ public class Alarm implements Serializable {
         mAlarmVibrate.add(toAdd);
     }
 
+    public void addAlarmID() {
+        int uuid = UUID.randomUUID().hashCode();
+        Log.i("Info", "UUID " + Integer.toString(uuid) + " created");
+        mAlarmIDs.add(uuid);
+    }
+
     public List<String> getAlarmNames() {
         return mAlarmNames;
     }
@@ -161,14 +184,20 @@ public class Alarm implements Serializable {
 
     public void setAlarmName(int position, String toSet) {
         mAlarmNames.set(position, toSet);
+        Log.i("Info", "Alarm name at position " + Integer.toString(position) + " set to "
+                + toSet);
     }
 
     public void setAlarmUri(int position, String toSet) {
         mAlarmUris.set(position, toSet);
+        Log.i("Info", "Uri at position " + Integer.toString(position) + " set to "
+                + toSet);
     }
 
     public void setAlarmVibrate(int position, boolean vibrate) {
         mAlarmVibrate.set(position, vibrate);
+        Log.i("Info", "Vibrate at position " + Integer.toString(position) + " set to "
+                + vibrate);
     }
 
     // Generated getters and setters
@@ -178,6 +207,7 @@ public class Alarm implements Serializable {
 
     public void setLabel(String label) {
         mLabel = label;
+        Log.i("Info", "Label set to " + label);
     }
 
     public int getFromHour() {
@@ -186,7 +216,7 @@ public class Alarm implements Serializable {
 
     public void setFromHour(int fromHour) {
         mFromHour = fromHour;
-        Log.i("Alarm.java", "From hour set to " + Integer.toString(fromHour));
+        Log.i("Info", "From hour set to " + Integer.toString(fromHour));
     }
 
     public int getFromMinute() {
@@ -195,7 +225,7 @@ public class Alarm implements Serializable {
 
     public void setFromMinute(int fromMinute) {
         mFromMinute = fromMinute;
-        Log.i("Alarm.java", "From minute set to " + Integer.toString(fromMinute));
+        Log.i("Info", "From minute set to " + Integer.toString(fromMinute));
     }
 
     public int getToHour() {
@@ -204,7 +234,7 @@ public class Alarm implements Serializable {
 
     public void setToHour(int toHour) {
         mToHour = toHour;
-        Log.i("Alarm.java", "To hour set to " + Integer.toString(toHour));
+        Log.i("Info", "To hour set to " + Integer.toString(toHour));
     }
 
     public int getToMinute() {
@@ -213,7 +243,7 @@ public class Alarm implements Serializable {
 
     public void setToMinute(int toMinute) {
         mToMinute = toMinute;
-        Log.i("Alarm.java", "To minute set to " + Integer.toString(toMinute));
+        Log.i("Info", "To minute set to " + Integer.toString(toMinute));
     }
 
     public int getNumAlarms() {
@@ -222,6 +252,7 @@ public class Alarm implements Serializable {
 
     public void setNumAlarms(int numAlarms) {
         mNumAlarms = numAlarms;
+        Log.i("Info", "Number of alarms set to " + Integer.toString(numAlarms));
     }
 
     public boolean isSunday() {
@@ -230,6 +261,7 @@ public class Alarm implements Serializable {
 
     public void setSunday(boolean sunday) {
         mSunday = sunday;
+        Log.i("Info", "Repeating Sunday set to: " + sunday);
     }
 
     public boolean isMonday() {
@@ -238,6 +270,7 @@ public class Alarm implements Serializable {
 
     public void setMonday(boolean monday) {
         mMonday = monday;
+        Log.i("Info", "Repeating Monday set to: " + monday);
     }
 
     public boolean isTuesday() {
@@ -246,6 +279,7 @@ public class Alarm implements Serializable {
 
     public void setTuesday(boolean tuesday) {
         mTuesday = tuesday;
+        Log.i("Info", "Repeating Tuesday set to: " + tuesday);
     }
 
     public boolean isWednesday() {
@@ -254,6 +288,7 @@ public class Alarm implements Serializable {
 
     public void setWednesday(boolean wednesday) {
         mWednesday = wednesday;
+        Log.i("Info", "Repeating Wednesday set to: " + wednesday);
     }
 
     public boolean isThursday() {
@@ -262,6 +297,7 @@ public class Alarm implements Serializable {
 
     public void setThursday(boolean thursday) {
         mThursday = thursday;
+        Log.i("Info", "Repeating Thursday set to: " + thursday);
     }
 
     public boolean isFriday() {
@@ -270,6 +306,7 @@ public class Alarm implements Serializable {
 
     public void setFriday(boolean friday) {
         mFriday = friday;
+        Log.i("Info", "Repeating Friday set to: " + friday);
     }
 
     public boolean isSaturday() {
@@ -278,6 +315,7 @@ public class Alarm implements Serializable {
 
     public void setSaturday(boolean saturday) {
         mSaturday = saturday;
+        Log.i("Info", "Repeating Saturday set to: " + saturday);
     }
 
     public boolean isOn() {
@@ -286,5 +324,6 @@ public class Alarm implements Serializable {
 
     public void setOn(boolean on) {
         mOn = on;
+        Log.i("Info", "Alarm set on: " + on);
     }
 }

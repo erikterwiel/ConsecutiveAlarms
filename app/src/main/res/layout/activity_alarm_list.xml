@@ -14,5 +14,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_alarm_black_48dp"/>
+        android:src="@drawable/ic_add_alarm_white_48dp"/>
 </android.support.design.widget.CoordinatorLayout>

@@ -42,9 +42,9 @@ import java.util.List;
 public class EditAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
     // Creating unique extras
-    private static final String EXTRA_ALARM_TO = "erikterwiel.consecutivealarmsv20.extra_alarm_to";
-    private static final String EXTRA_ALARM_FROM = "erikterwiel.consecutivealarmsv20.extra_alarm_from";
-    private static final int EXTRA_RINGTONE_PICKER_ID = 999;
+    private static final String EXTRA_ALARM_TO = "1000";
+    private static final String EXTRA_ALARM_FROM = "996";
+    private static final int EXTRA_RINGTONE_PICKER_ID = 997;
 
     // Lists functionality variables
     private Alarm mAlarm;
@@ -76,7 +76,7 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("EditAlarmActivity.java", "onCreate() called");
+        Log.i("Info", "onCreate() called");
         setContentView(R.layout.activity_edit_alarm);
 
         // Initializes variables
@@ -169,6 +169,7 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mAlarm.setNumAlarms(newVal);
+                mAlarm.resize(newVal, EditAlarmActivity.this);
                 updateUI();
             }
         });
@@ -229,12 +230,27 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         updateUI();
     }
 
-/*    @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();
-        mi.inflate();
+        mi.inflate(R.menu.done_button_menu, menu);
+        mDoneButton = menu.findItem(R.id.done_button);
+        mDoneButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mAlarm.cancelAlarm();
+                for (int i = 0; i < mAlarm.getNumAlarms(); i++) mAlarm.addAlarmID();
+                mAlarm.setAlarm();
+                mAlarm.setOn(true);
+                Intent i = new Intent();
+                i.putExtra(EXTRA_ALARM_FROM, mAlarm);
+                setResult(RESULT_OK, i);
+                finish();
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
-    }*/
+    }
 
     // Sets times when time is picked
     @Override
@@ -369,8 +385,6 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
             String name = ringtone.getTitle(this);
             mAlarm.setAlarmName(mPosition, name);
             mAlarm.setAlarmUri(mPosition, uri.toString());
-            Log.i("EditAlarmActivity.java", "Name of uri added with name " + name);
-            Log.i("EditAlarmActivity.java", "Uri added with name " + uri.toString());
             updateUI();
         }
     }

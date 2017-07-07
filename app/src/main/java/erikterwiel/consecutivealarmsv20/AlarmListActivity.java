@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -23,11 +24,14 @@ import java.util.List;
 public class AlarmListActivity extends AppCompatActivity {
 
     // Creating unique extras
-    private static final int REQUEST_NEW_ALARM = 0;
+    private static final String EXTRA_ALARM_FROM = "996";
+    private static final int EXTRA_REQUEST_NEW_ALARM = 999;
+    private static final int EXTRA_REQUEST_EDIT_ALARM = 998;
 
     // List functionality variables
-    private List<Alarm> mAlarms;
+    private List<Alarm> mAlarms = new ArrayList<Alarm>();
     private AlarmAdapter mAlarmAdapter;
+    private int mAlarmSetIndex;
 
     // List GUI variables
     private RecyclerView mAlarmList;
@@ -36,7 +40,7 @@ public class AlarmListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("AlarmListActivity.java", "onCreate() called");
+        Log.i("Info", "onCreate() called");
         SharedPreferences alarmDatabase = getSharedPreferences("AlarmDatabase", Context.MODE_PRIVATE);
         setContentView(R.layout.activity_alarm_list);
 
@@ -53,17 +57,13 @@ public class AlarmListActivity extends AppCompatActivity {
                     toSend.addAlarmUri(Alarm.getDefaultUri());
                     toSend.addAlarmVibrate(false);
                 }
-                Log.i("AlarmListActivity.java", "New alarm created");
+                Log.i("Info", "New alarm created");
                 Intent i = EditAlarmActivity.newIntent(AlarmListActivity.this, toSend);
-                startActivityForResult(i, REQUEST_NEW_ALARM);
+                startActivityForResult(i, EXTRA_REQUEST_NEW_ALARM);
             }
         });
 
         // Setup for alarm list RecyclerView
-        mAlarms = new ArrayList<Alarm>();
-        for (int i = 0; i < 3; i++) {
-            mAlarms.add(new Alarm());
-        }
         mAlarmList = (RecyclerView) findViewById(R.id.alarm_list);
         mAlarmList.setLayoutManager(new LinearLayoutManager(this));
         updateUI();
@@ -72,10 +72,21 @@ public class AlarmListActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i("AlarmListActivity.java", "onStop()");
+        Log.i("Info", "onStop() called");
         SharedPreferences alarmDatabase = getSharedPreferences("AlarmDatabase", Context.MODE_PRIVATE);
         SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
         databaseEditor.apply();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EXTRA_REQUEST_NEW_ALARM && resultCode == RESULT_OK) {
+            mAlarms.add((Alarm) data.getSerializableExtra(EXTRA_ALARM_FROM));
+        } else if (requestCode == EXTRA_REQUEST_EDIT_ALARM && resultCode == RESULT_OK){
+            mAlarms.set(mAlarmSetIndex, (Alarm) data.getSerializableExtra(EXTRA_ALARM_FROM));
+        }
+        updateUI();
     }
 
     // Called whenever UI is changed
@@ -155,6 +166,34 @@ public class AlarmListActivity extends AppCompatActivity {
 
             // Display number of alarms
             mNumAlarms.setText(Integer.toString(mAlarm.getNumAlarms()) + " Alarms");
+
+            // Display the label
+            mLabel.setText(mAlarm.getLabel());
+
+            // Sets up the alarm switch
+            mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked && !mAlarm.isOn()) {
+                        mAlarm.setAlarm();
+                        mAlarm.setOn(true);
+                    } else if (!isChecked && mAlarm.isOn()) {
+                        mAlarm.cancelAlarm();
+                        mAlarm.setOn(false);
+                    }
+                }
+            });
+            mSwitch.setChecked(mAlarm.isOn());
+
+            // Sets up settings button
+            mSettings.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAlarmSetIndex = mAlarms.indexOf(mAlarm);
+                    Intent i =  EditAlarmActivity.newIntent(AlarmListActivity.this, mAlarm);
+                    startActivityForResult(i, EXTRA_REQUEST_EDIT_ALARM);
+                }
+            });
         }
     }
 }
