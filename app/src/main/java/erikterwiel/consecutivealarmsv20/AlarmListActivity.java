@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -155,6 +156,8 @@ public class AlarmListActivity extends AppCompatActivity {
     public void updateUI() {
         mAlarmAdapter = new AlarmAdapter(mAlarms);
         mAlarmList.setAdapter(mAlarmAdapter);
+       // ItemTouchHelper itemTouchHelper = new ItemTouchHelper(createHelperCallBack());
+
     }
 
     // RecyclerView Adapter and Holder

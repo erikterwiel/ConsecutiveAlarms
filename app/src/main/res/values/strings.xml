@@ -5,4 +5,5 @@
     <string name="alarms">Alarms</string>
     <string name="alarm_list_vibrate">Vibrate</string>
     <string name="edit_alarm_activity_label">Edit Alarm</string>
+    <string name="set_master_alarm">Set Master Ringtone</string>
 </resources>
