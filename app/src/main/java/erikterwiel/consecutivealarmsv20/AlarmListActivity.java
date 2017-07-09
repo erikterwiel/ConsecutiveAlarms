@@ -40,9 +40,38 @@ public class AlarmListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("Info", "onCreate() called");
-        SharedPreferences alarmDatabase = getSharedPreferences("AlarmDatabase", Context.MODE_PRIVATE);
         setContentView(R.layout.activity_alarm_list);
+        Log.i("Info", "onCreate() called");
+
+        // Loads saved alarms
+        SharedPreferences alarmDatabase = getSharedPreferences("AlarmDatabase", Context.MODE_PRIVATE);
+        if (alarmDatabase.contains("arraySize")) {
+            int toLoadSize = alarmDatabase.getInt("arraySize", 0);
+            for (int i = 0; i < toLoadSize; i++) {
+                Alarm toAdd = new Alarm();
+                toAdd.setLabel(alarmDatabase.getString(i + "label", null));
+                toAdd.setFromHour(alarmDatabase.getInt(i + "fromHour", 7));
+                toAdd.setFromMinute(alarmDatabase.getInt(i + "fromMinute", 20));
+                toAdd.setToHour(alarmDatabase.getInt(i + "toHour", 7));
+                toAdd.setToMinute(alarmDatabase.getInt(i + "toMinute", 30));
+                toAdd.setNumAlarms(alarmDatabase.getInt(i + "numAlarms", 3));
+                toAdd.setSunday(alarmDatabase.getBoolean(i + "sunday", false));
+                toAdd.setMonday(alarmDatabase.getBoolean(i + "monday", false));
+                toAdd.setTuesday(alarmDatabase.getBoolean(i + "tuesday", false));
+                toAdd.setWednesday(alarmDatabase.getBoolean(i + "wednesday", false));
+                toAdd.setThursday(alarmDatabase.getBoolean(i + "thursday", false));
+                toAdd.setFriday(alarmDatabase.getBoolean(i + "friday", false));
+                toAdd.setSaturday(alarmDatabase.getBoolean(i + "saturday", false));
+                toAdd.setOn(alarmDatabase.getBoolean(i + "on", false));
+                for (int j = 0; j < alarmDatabase.getInt(i + "numAlarms", 3); j++) {
+                    toAdd.addAlarmID(alarmDatabase.getInt(i + "alarmID" + j, 0));
+                    toAdd.addAlarmName(alarmDatabase.getString(i + "alarmName" + j, null));
+                    toAdd.addAlarmUri(alarmDatabase.getString(i + "alarmUri" + j, null));
+                    toAdd.addAlarmVibrate(alarmDatabase.getBoolean(i + "alarmVibrate" + j, false));
+                }
+                mAlarms.add(toAdd);
+            }
+        }
 
         // Setup for new alarm button
         mNewAlarmButton = (FloatingActionButton) findViewById(R.id.new_alarm_button);
@@ -75,18 +104,51 @@ public class AlarmListActivity extends AppCompatActivity {
         Log.i("Info", "onStop() called");
         SharedPreferences alarmDatabase = getSharedPreferences("AlarmDatabase", Context.MODE_PRIVATE);
         SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
+        databaseEditor.putInt("arraySize", mAlarms.size());
+        for (int i = 0; i < mAlarms.size(); i++) {
+            Alarm toSave = mAlarms.get(i);
+            databaseEditor.putString(i + "label", toSave.getLabel());
+            databaseEditor.putInt(i + "fromHour", toSave.getFromHour());
+            databaseEditor.putInt(i + "fromMinute", toSave.getFromMinute());
+            databaseEditor.putInt(i + "toHour", toSave.getToHour());
+            databaseEditor.putInt(i + "toMinute", toSave.getToMinute());
+            databaseEditor.putInt(i + "numAlarms", toSave.getNumAlarms());
+            databaseEditor.putBoolean(i + "sunday", toSave.isSunday());
+            databaseEditor.putBoolean(i + "monday", toSave.isMonday());
+            databaseEditor.putBoolean(i + "tuesday", toSave.isTuesday());
+            databaseEditor.putBoolean(i + "wednesday", toSave.isWednesday());
+            databaseEditor.putBoolean(i + "thursday", toSave.isThursday());
+            databaseEditor.putBoolean(i + "friday", toSave.isFriday());
+            databaseEditor.putBoolean(i + "saturday", toSave.isSaturday());
+            databaseEditor.putBoolean(i + "on", toSave.isOn());
+            for (int j = 0; j < toSave.getNumAlarms(); j++) {
+                databaseEditor.putInt(i + "alarmID" + j, toSave.getAlarmID(j));
+                databaseEditor.putString(i + "alarmName" + j, toSave.getAlarmName(j));
+                databaseEditor.putString(i + "alarmUri" + j, toSave.getAlarmUri(j));
+                databaseEditor.putBoolean(i + "alarmVibrate" + j, toSave.getAlarmVibrate(j));
+            }
+        }
         databaseEditor.apply();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == EXTRA_REQUEST_NEW_ALARM && resultCode == RESULT_OK) {
-            mAlarms.add((Alarm) data.getSerializableExtra(EXTRA_ALARM_FROM));
-        } else if (requestCode == EXTRA_REQUEST_EDIT_ALARM && resultCode == RESULT_OK){
-            mAlarms.set(mAlarmSetIndex, (Alarm) data.getSerializableExtra(EXTRA_ALARM_FROM));
+        if (resultCode == RESULT_OK) {
+            if (requestCode == EXTRA_REQUEST_NEW_ALARM) {
+                mAlarms.add((Alarm) data.getSerializableExtra(EXTRA_ALARM_FROM));
+            } else if (requestCode == EXTRA_REQUEST_EDIT_ALARM) {
+                mAlarms.set(mAlarmSetIndex, (Alarm) data.getSerializableExtra(EXTRA_ALARM_FROM));
+            }
+            notifyAlarmSet((Alarm) data.getSerializableExtra(EXTRA_ALARM_FROM));
         }
         updateUI();
+    }
+
+    // Called when alarm is set
+    public void notifyAlarmSet(Alarm alarm) {
+        Snackbar.make(mAlarmList, "An alarm has been set lol not really",
+                Snackbar.LENGTH_LONG).show();
     }
 
     // Called whenever UI is changed
@@ -177,6 +239,7 @@ public class AlarmListActivity extends AppCompatActivity {
                     if (isChecked && !mAlarm.isOn()) {
                         mAlarm.setAlarm();
                         mAlarm.setOn(true);
+                        notifyAlarmSet(mAlarm);
                     } else if (!isChecked && mAlarm.isOn()) {
                         mAlarm.cancelAlarm();
                         mAlarm.setOn(false);

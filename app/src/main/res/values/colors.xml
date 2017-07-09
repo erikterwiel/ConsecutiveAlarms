@@ -11,6 +11,6 @@
     <color name="ca_primary">#263238</color>
     <color name="ca_background">#263238</color>
     <color name="ca_accent">#f44336</color>
-    <color name="ca_navbar">#212121</color>
-    <color name="ca_statusbar">#212121</color>
+    <color name="ca_navbar">#000000</color>
+    <color name="ca_statusbar">#000000</color>
 </resources>

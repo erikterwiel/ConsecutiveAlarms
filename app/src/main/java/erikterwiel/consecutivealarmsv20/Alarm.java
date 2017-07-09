@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -39,6 +40,7 @@ public class Alarm implements Serializable {
 
     // Initializes object variables
     public Alarm() {
+        Log.i("Info", "New Alarm object created");
         mFromHour = 7;
         mFromMinute = 20;
         mToHour = 7;
@@ -168,7 +170,12 @@ public class Alarm implements Serializable {
         mAlarmVibrate.add(toAdd);
     }
 
-    public void addAlarmID() {
+    public void addAlarmID(int toAdd) {
+        mAlarmIDs.add(toAdd);
+        Log.i("Info", "UUID " + Integer.toString(toAdd) + " added");
+    }
+
+    public void addNewAlarmID() {
         int uuid = UUID.randomUUID().hashCode();
         Log.i("Info", "UUID " + Integer.toString(uuid) + " created");
         mAlarmIDs.add(uuid);
@@ -176,6 +183,18 @@ public class Alarm implements Serializable {
 
     public List<String> getAlarmNames() {
         return mAlarmNames;
+    }
+
+    public int getAlarmID(int position) {
+        return mAlarmIDs.get(position);
+    }
+
+    public String getAlarmName(int position) {
+        return mAlarmNames.get(position);
+    }
+
+    public String getAlarmUri(int position) {
+        return mAlarmUris.get(position);
     }
 
     public boolean getAlarmVibrate(int position) {
