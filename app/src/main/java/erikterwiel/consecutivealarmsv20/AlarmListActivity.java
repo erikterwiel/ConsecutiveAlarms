@@ -104,17 +104,6 @@ public class AlarmListActivity extends AppCompatActivity {
         mAlarmList = (RecyclerView) findViewById(R.id.alarm_list);
         mAlarmList.setLayoutManager(new LinearLayoutManager(this));
         updateUI();
-
-        FloatingActionButton testButton = (FloatingActionButton) findViewById(R.id.test_button);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i  < mAlarms.size(); i++) {
-                    Log.i("Info", "Label is: " + mAlarms.get(i).getLabel());
-                }
-                Log.i("Info", "Size is: " + Integer.toString(mAlarms.size()));
-            }
-        });
     }
 
     @Override
@@ -208,7 +197,7 @@ public class AlarmListActivity extends AppCompatActivity {
     private void onItemRemove(final RecyclerView.ViewHolder viewHolder) {
         final int position = viewHolder.getAdapterPosition();
         final boolean wasOn = mAlarms.get(position).isOn();
-        if (wasOn) mAlarms.get(position).cancelAlarm();
+        if (wasOn) mAlarms.get(position).cancelAlarm(this);
         final Alarm deletedAlarm = mAlarms.get(position);
         mAlarms.remove(position);
         mAlarmAdapter.notifyItemRemoved(position);
@@ -221,7 +210,7 @@ public class AlarmListActivity extends AppCompatActivity {
                 mAlarmAdapter.notifyItemInserted(position);
                 mAlarmList.scrollToPosition(position);
                 if (wasOn) {
-                    mAlarms.get(position).setAlarm();
+                    mAlarms.get(position).setAlarm(AlarmListActivity.this);
                     notifyAlarmSet(mAlarms.get(position));
                 }
             }
@@ -309,10 +298,10 @@ public class AlarmListActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked && !mAlarm.isOn()) {
-                        mAlarm.setAlarm();
+                        mAlarm.setAlarm(AlarmListActivity.this);
                         notifyAlarmSet(mAlarm);
                     } else if (!isChecked && mAlarm.isOn()) {
-                        mAlarm.cancelAlarm();
+                        mAlarm.cancelAlarm(AlarmListActivity.this);
                     }
                 }
             });

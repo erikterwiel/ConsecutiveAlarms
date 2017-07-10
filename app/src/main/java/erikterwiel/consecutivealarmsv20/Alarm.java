@@ -1,6 +1,9 @@
 package erikterwiel.consecutivealarmsv20;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.provider.Settings;
@@ -9,6 +12,7 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,14 +64,54 @@ public class Alarm implements Serializable {
         mOn = false;
     }
 
-    public void setAlarm() {
+    // Sets alarm
+    public void setAlarm(Context context) {
+
+        // Calculates the interval in milliseconds
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, mFromHour);
+        calendar.set(Calendar.MINUTE, mFromMinute);
+        if (System.currentTimeMillis() > calendar.getTimeInMillis())
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        long fromMillis = calendar.getTimeInMillis();
+        calendar.set(Calendar.HOUR_OF_DAY, mToHour);
+        calendar.set(Calendar.MINUTE, mToMinute);
+        long toMillis = calendar.getTimeInMillis();
+        long interval = 0;
+        if (mNumAlarms != 1) interval = (toMillis - fromMillis) / (mNumAlarms - 1);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        for (int i = 0; i < mNumAlarms; i++) {
+
+            // Creates intent that displays alarm info
+            Intent appIntent = new Intent(context, AlarmListActivity.class);
+            PendingIntent pendingAppIntent = PendingIntent.getActivity(context, 0, appIntent, 0);
+            AlarmManager.AlarmClockInfo alarmInfo =
+                    new AlarmManager.AlarmClockInfo(fromMillis + (i * interval), pendingAppIntent);
+
+            // Creates intent that actually sets the alarm
+            Intent receiverIntent = new Intent(context, AlarmReceiver.class);
+            receiverIntent.putExtra("alarmTone", getAlarmUri(i));
+            receiverIntent.putExtra("alarmVibrate", getAlarmVibrate(i));
+            PendingIntent pendingServiceIntent = PendingIntent.getBroadcast(
+                    context, getAlarmID(i), receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager.setAlarmClock(alarmInfo, pendingServiceIntent);
+        }
         setOn(true);
     }
 
-    public void cancelAlarm() {
+    // Cancels alarm
+    public void cancelAlarm(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent appIntent = new Intent(context, AlarmReceiver.class);
+        for (int i = 0; i < mNumAlarms; i++)
+            alarmManager.cancel(PendingIntent.getBroadcast(
+                    context, getAlarmID(i), appIntent, PendingIntent.FLAG_UPDATE_CURRENT));
         setOn(false);
     }
 
+    // Changes array to whatever size provided
     public void resize(int newSize, Context context) {
         ArrayList<String> tempAlarmNames = new ArrayList<String>();
         ArrayList<String> tempAlarmUris = new ArrayList<String>();
