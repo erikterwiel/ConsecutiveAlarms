@@ -255,7 +255,6 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
                 mAlarm.cancelAlarm();
                 for (int i = 0; i < mAlarm.getNumAlarms(); i++) mAlarm.addNewAlarmID();
                 mAlarm.setAlarm();
-                mAlarm.setOn(true);
                 Intent i = new Intent();
                 i.putExtra(EXTRA_ALARM_FROM, mAlarm);
                 setResult(RESULT_OK, i);
@@ -337,7 +336,15 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         } else {
             mMasterAlarmNameView.setText(R.string.set_master_alarm);
         }
-        if (sameVibrate && compareVibrate) mMasterVibrateButton.setChecked(true);
+        mMasterVibrateButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {}
+        });
+        if (sameVibrate && compareVibrate) {
+            mMasterVibrateButton.setChecked(true);
+        } else {
+            mMasterVibrateButton.setChecked(false);
+        }
         mMasterVibrateButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -3,8 +3,11 @@ package erikterwiel.consecutivealarmsv20;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +23,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AlarmListActivity extends AppCompatActivity {
 
@@ -45,7 +51,8 @@ public class AlarmListActivity extends AppCompatActivity {
         Log.i("Info", "onCreate() called");
 
         // Loads saved alarms
-        SharedPreferences alarmDatabase = getSharedPreferences("AlarmDatabase", Context.MODE_PRIVATE);
+        SharedPreferences alarmDatabase = getSharedPreferences(
+                "AlarmDatabase", Context.MODE_PRIVATE);
         if (alarmDatabase.contains("arraySize")) {
             int toLoadSize = alarmDatabase.getInt("arraySize", 0);
             for (int i = 0; i < toLoadSize; i++) {
@@ -97,13 +104,25 @@ public class AlarmListActivity extends AppCompatActivity {
         mAlarmList = (RecyclerView) findViewById(R.id.alarm_list);
         mAlarmList.setLayoutManager(new LinearLayoutManager(this));
         updateUI();
+
+        FloatingActionButton testButton = (FloatingActionButton) findViewById(R.id.test_button);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i  < mAlarms.size(); i++) {
+                    Log.i("Info", "Label is: " + mAlarms.get(i).getLabel());
+                }
+                Log.i("Info", "Size is: " + Integer.toString(mAlarms.size()));
+            }
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.i("Info", "onStop() called");
-        SharedPreferences alarmDatabase = getSharedPreferences("AlarmDatabase", Context.MODE_PRIVATE);
+        SharedPreferences alarmDatabase = getSharedPreferences(
+                "AlarmDatabase", Context.MODE_PRIVATE);
         SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
         databaseEditor.putInt("arraySize", mAlarms.size());
         for (int i = 0; i < mAlarms.size(); i++) {
@@ -154,10 +173,60 @@ public class AlarmListActivity extends AppCompatActivity {
 
     // Called whenever UI is changed
     public void updateUI() {
+        Collections.sort(mAlarms, new Comparator<Alarm>() {
+            @Override
+            public int compare(Alarm alarm1, Alarm alarm2) {
+                return alarm1.getFromHour() - alarm2.getFromHour();
+            }
+        });
         mAlarmAdapter = new AlarmAdapter(mAlarms);
         mAlarmList.setAdapter(mAlarmAdapter);
-       // ItemTouchHelper itemTouchHelper = new ItemTouchHelper(createHelperCallBack());
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(createHelperCallBack());
+        itemTouchHelper.attachToRecyclerView(mAlarmList);
+    }
 
+    // Sets up responses to actions on RecyclerView items
+    public ItemTouchHelper.Callback createHelperCallBack() {
+        ItemTouchHelper.SimpleCallback simpleCallback =  new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                onItemRemove(viewHolder);
+            }
+        };
+        return simpleCallback;
+    }
+
+    // Shows undo button on alarm deletion
+    private void onItemRemove(final RecyclerView.ViewHolder viewHolder) {
+        final int position = viewHolder.getAdapterPosition();
+        final boolean wasOn = mAlarms.get(position).isOn();
+        if (wasOn) mAlarms.get(position).cancelAlarm();
+        final Alarm deletedAlarm = mAlarms.get(position);
+        mAlarms.remove(position);
+        mAlarmAdapter.notifyItemRemoved(position);
+        Snackbar notification = Snackbar.make(mAlarmList, "Alarm deleted", Snackbar.LENGTH_LONG);
+        notification.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(mAlarmList, "Alarm restored", Snackbar.LENGTH_LONG).show();
+                mAlarms.add(position, deletedAlarm);
+                mAlarmAdapter.notifyItemInserted(position);
+                mAlarmList.scrollToPosition(position);
+                if (wasOn) {
+                    mAlarms.get(position).setAlarm();
+                    notifyAlarmSet(mAlarms.get(position));
+                }
+            }
+        });
+        notification.show();
     }
 
     // RecyclerView Adapter and Holder
@@ -241,11 +310,9 @@ public class AlarmListActivity extends AppCompatActivity {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked && !mAlarm.isOn()) {
                         mAlarm.setAlarm();
-                        mAlarm.setOn(true);
                         notifyAlarmSet(mAlarm);
                     } else if (!isChecked && mAlarm.isOn()) {
                         mAlarm.cancelAlarm();
-                        mAlarm.setOn(false);
                     }
                 }
             });

@@ -61,11 +61,11 @@ public class Alarm implements Serializable {
     }
 
     public void setAlarm() {
-
+        setOn(true);
     }
 
     public void cancelAlarm() {
-
+        setOn(false);
     }
 
     public void resize(int newSize, Context context) {
