@@ -28,12 +28,13 @@
             android:label="@string/edit_alarm_activity_label"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".AlarmAlertActivity"
+            android:showOnLockScreen="true"
+            android:screenOrientation="portrait"/>
+
         <receiver
             android:name=".AlarmReceiver"/>
-
-        <service
-            android:name=".AlarmService"
-            android:enabled="true"/>
 
     </application>
 
