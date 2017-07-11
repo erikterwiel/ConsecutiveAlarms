@@ -13,4 +13,5 @@
     <color name="ca_accent">#f44336</color>
     <color name="ca_navbar">#000000</color>
     <color name="ca_statusbar">#000000</color>
+    <color name="white">#FFFFFFFF</color>
 </resources>
