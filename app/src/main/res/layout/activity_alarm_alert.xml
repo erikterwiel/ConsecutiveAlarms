@@ -5,37 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
         android:gravity="center"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Display3"
             android:textColor="@color/white"
-            tools:text="9:08"/>
+            android:text="9:08"
+            tools:text="9:08"
+            android:id="@+id/textView3" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/white"
-            tools:text="AM"/>
-    </LinearLayout>
+            android:text="AM"
+            tools:text="AM"
+            android:layout_alignBaseline="@+id/textView3"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_toEndOf="@+id/textView3" />
+    </RelativeLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:text="Alarm"
         tools:text="Alarm"/>
-    <SeekBar
-        android:id="@+id/alert_seek_bar"
+    <LinearLayout
+        android:id="@+id/alert_seek_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:progress="50"
-        android:progressDrawable="@android:color/transparent"
-        android:thumb="@drawable/ic_alarm_off_white_18dp"/>
+        android:layout_height="wrap_content">
+        <SeekBar
+            android:id="@+id/alert_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:progress="50"
+            android:progressDrawable="@android:color/transparent"
+            android:thumb="@drawable/ic_alarm_off_white_18dp"/>
+    </LinearLayout>
 </LinearLayout>

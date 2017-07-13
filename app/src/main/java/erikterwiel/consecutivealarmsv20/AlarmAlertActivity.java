@@ -3,10 +3,13 @@ package erikterwiel.consecutivealarmsv20;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 /**
@@ -27,6 +30,21 @@ public class AlarmAlertActivity extends Activity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         setContentView(R.layout.activity_alarm_alert);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        float density = getResources().getDisplayMetrics().density;
+        float dpHeight = outMetrics.heightPixels / density;
+        int dpHeightInt = (int) (dpHeight * 1.25);
+        Log.i("Info", "The height in dp is: " + dpHeightInt);
+
+        LinearLayout seekLayout = (LinearLayout) findViewById(R.id.alert_seek_layout);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, dpHeightInt, 0, 0);
+        seekLayout.setLayoutParams(layoutParams);
+
         SeekBar seekBar = (SeekBar) findViewById(R.id.alert_seek_bar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
