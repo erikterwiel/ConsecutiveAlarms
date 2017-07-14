@@ -12,11 +12,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        serviceIntent.putExtra("alarmTone", intent.getStringExtra("alarmTone"));
-//        serviceIntent.putExtra("alarmVibrate", intent.getBooleanExtra("alarmVibrate", false));
-//        context.startService(serviceIntent);
         Intent activityIntent = new Intent(context, AlarmAlertActivity.class);
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activityIntent.putExtra("masterID", intent.getStringExtra("masterID"));
+        activityIntent.putExtra("alarmLabel", intent.getStringExtra("alarmLabel"));
+        activityIntent.putExtra("alarmTone", intent.getStringExtra("alarmTone"));
+        activityIntent.putExtra("alarmVibrate", intent.getBooleanExtra("alarmVibrate", false));
         context.startActivity(activityIntent);
     }
 }

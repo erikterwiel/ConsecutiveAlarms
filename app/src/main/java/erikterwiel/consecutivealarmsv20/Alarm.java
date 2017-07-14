@@ -93,6 +93,8 @@ public class Alarm implements Serializable {
 
             // Creates intent that actually sets the alarm
             Intent receiverIntent = new Intent(context, AlarmReceiver.class);
+            if (i == mNumAlarms - 1) receiverIntent.putExtra("masterID", getMasterID());
+            receiverIntent.putExtra("alarmLabel", getLabel());
             receiverIntent.putExtra("alarmTone", getAlarmUri(i));
             receiverIntent.putExtra("alarmVibrate", getAlarmVibrate(i));
             PendingIntent pendingServiceIntent = PendingIntent.getBroadcast(

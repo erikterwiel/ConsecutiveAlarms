@@ -2,6 +2,8 @@ package erikterwiel.consecutivealarmsv20;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -20,6 +22,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
+
+import java.util.Calendar;
 
 /**
  * Created by Erik on 7/11/2017.
@@ -42,6 +47,17 @@ public class AlarmAlertActivity extends Activity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         setContentView(R.layout.activity_alarm_alert);
+
+        // Displays alarm time and name
+        TextView alarmTime = (TextView) findViewById(R.id.alert_time);
+        TextView alarmAM = (TextView) findViewById(R.id.alert_am);
+        TextView alarmLabel = (TextView) findViewById(R.id.alert_label);
+        Calendar calendar = Calendar.getInstance();
+        Time currentTime = Alarm.getTime(
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        alarmTime.setText(currentTime.getTime());
+        alarmAM.setText(currentTime.getMorning());
+        alarmLabel.setText(getIntent().getStringExtra("alarmLabel"));
 
         // Sets gap between alarm name and swipe bar based on screen height
         Display display = getWindowManager().getDefaultDisplay();

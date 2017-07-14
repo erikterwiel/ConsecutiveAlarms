@@ -13,32 +13,28 @@
         android:gravity="center"
         android:orientation="horizontal">
         <TextView
+            android:id="@+id/alert_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-            android:textColor="@color/white"
-            android:text="9:08"
-            tools:text="9:08"
-            android:id="@+id/textView3" />
+            android:textColor="@color/white"/>
         <TextView
+            android:id="@+id/alert_am"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/white"
-            android:text="AM"
-            tools:text="AM"
-            android:layout_alignBaseline="@+id/textView3"
-            android:layout_alignBottom="@+id/textView3"
-            android:layout_toEndOf="@+id/textView3" />
+            android:layout_alignBaseline="@id/alert_time"
+            android:layout_alignBottom="@id/alert_time"
+            android:layout_toEndOf="@id/alert_time" />
     </RelativeLayout>
     <TextView
+        android:id="@+id/alert_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:text="Alarm"
-        tools:text="Alarm"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
