@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -57,7 +58,10 @@ public class AlarmAlertActivity extends Activity {
                 calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
         alarmTime.setText(currentTime.getTime());
         alarmAM.setText(currentTime.getMorning());
-        alarmLabel.setText(getIntent().getStringExtra("alarmLabel"));
+        String label = getIntent().getStringExtra("alarmLabel");
+        if (label == null) {
+            alarmLabel.setText(R.string.alarm);
+        } else alarmLabel.setText(label);
 
         // Sets gap between alarm name and swipe bar based on screen height
         Display display = getWindowManager().getDefaultDisplay();
@@ -70,13 +74,22 @@ public class AlarmAlertActivity extends Activity {
         layoutParams.setMargins(0, 0, 0, pxHeight);
         seekLayout.setLayoutParams(layoutParams);
 
+        // Sets up SeekBar and listeners
         SeekBar seekBar = (SeekBar) findViewById(R.id.alert_seek_bar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            Vibrator gravityVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            boolean gravitated = false;
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress < 3) seekBar.setProgress(3);
                 if (progress > 97) seekBar.setProgress(97);
-                if (progress == 3 || progress == 97) setThumbOff(seekBar);
+                if (seekBar.getProgress() == 3 || seekBar.getProgress() == 97) {
+                    setThumbOff(seekBar);
+                    if (!gravitated) {
+                        gravityVibrator.vibrate(50);
+                        gravitated = true;
+                    }
+                }
             }
 
             @Override
@@ -87,8 +100,16 @@ public class AlarmAlertActivity extends Activity {
                 Log.i("Info", "Progress is: " + seekBar.getProgress());
                 if (seekBar.getProgress() < 20) {
                     animate(seekBar, 3, 175);
+                    if (!gravitated) {
+                        gravityVibrator.vibrate(50);
+                        gravitated = true;
+                    }
                 } else if (seekBar.getProgress() > 80) {
                     animate(seekBar, 97, 175);
+                    if (!gravitated) {
+                        gravityVibrator.vibrate(50);
+                        gravitated = true;
+                    }
                 } else animate(seekBar, 50, 250);
             }
         });
