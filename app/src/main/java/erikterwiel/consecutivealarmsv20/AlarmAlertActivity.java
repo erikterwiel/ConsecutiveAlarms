@@ -68,7 +68,11 @@ public class AlarmAlertActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(final SeekBar seekBar) {
-                if (seekBar.getProgress() == 3 || seekBar.getProgress() == 97) {
+                Log.i("Info", "Progress is: " + seekBar.getProgress());
+                if (seekBar.getProgress() < 20) {
+                    animate(seekBar, 3, 175);
+                } else if (seekBar.getProgress() > 80) {
+                    animate(seekBar, 97, 175);
                 } else animate(seekBar, 50, 250);
             }
         });
