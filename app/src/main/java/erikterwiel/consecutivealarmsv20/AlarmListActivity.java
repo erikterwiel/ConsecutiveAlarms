@@ -22,6 +22,8 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -82,6 +84,7 @@ public class AlarmListActivity extends AppCompatActivity {
             }
         }
 
+
         // Setup for new alarm button
         mNewAlarmButton = (FloatingActionButton) findViewById(R.id.new_alarm_button);
         mNewAlarmButton.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +108,7 @@ public class AlarmListActivity extends AppCompatActivity {
         mAlarmList = (RecyclerView) findViewById(R.id.alarm_list);
         mAlarmList.setLayoutManager(new LinearLayoutManager(this));
         updateUI();
+        updateNoAlarmText();
     }
 
     @Override
@@ -154,6 +158,15 @@ public class AlarmListActivity extends AppCompatActivity {
             notifyAlarmSet((Alarm) data.getSerializableExtra(EXTRA_ALARM_FROM));
         }
         updateUI();
+        updateNoAlarmText();
+    }
+
+    // Sets text if there are no alarms
+    public void updateNoAlarmText() {
+        TextView noAlarmText = (TextView) findViewById(R.id.list_activity_text);
+        if (mAlarms.size() == 0) {
+            noAlarmText.setText(R.string.no_alarm_warning);
+        } else noAlarmText.setText("");
     }
 
     // Called when alarm is set
@@ -215,9 +228,11 @@ public class AlarmListActivity extends AppCompatActivity {
                     mAlarms.get(position).setAlarm(AlarmListActivity.this);
                     notifyAlarmSet(mAlarms.get(position));
                 }
+                updateNoAlarmText();
             }
         });
         notification.show();
+        updateNoAlarmText();
     }
 
     // RecyclerView Adapter and Holder
