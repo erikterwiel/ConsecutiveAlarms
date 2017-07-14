@@ -1,10 +1,15 @@
 package erikterwiel.consecutivealarmsv20;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -50,7 +55,7 @@ public class AlarmAlertActivity extends Activity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress <= 15) seekBar.setProgress(15);
-        //        if (progress >= 85) seekBar.setProgress(85);
+                if (progress >= 85) seekBar.setProgress(85);
             }
 
             @Override
@@ -74,5 +79,12 @@ public class AlarmAlertActivity extends Activity {
                 }
             }
         });
+
+        int px = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
+        Drawable offThumb = getResources().getDrawable(R.drawable.ic_alarm_white_160px);
+        Bitmap bitmap = ((BitmapDrawable) offThumb).getBitmap();
+        Drawable offThumbScaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, px, px, true));
+        seekBar.setThumb(offThumbScaled);
     }
 }
