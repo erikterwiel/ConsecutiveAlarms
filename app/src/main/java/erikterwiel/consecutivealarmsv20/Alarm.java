@@ -23,6 +23,7 @@ import java.util.UUID;
 public class Alarm implements Serializable {
 
     // Lists object variables
+    private String mMasterID;
     private String mLabel;
     private int mFromHour;
     private int mFromMinute;
@@ -264,6 +265,21 @@ public class Alarm implements Serializable {
     }
 
     // Generated getters and setters
+
+    public String getMasterID() {
+        return mMasterID;
+    }
+
+    public void setMasterID(String masterID) {
+        mMasterID = masterID;
+        Log.i("Info", "Master ID set to: " + masterID);
+    }
+
+    public void setNewMasterID() {
+        mMasterID = UUID.randomUUID().toString();
+        Log.i("Info", "Master ID set to: " + mMasterID);
+    }
+
     public String getLabel() {
         return mLabel;
     }

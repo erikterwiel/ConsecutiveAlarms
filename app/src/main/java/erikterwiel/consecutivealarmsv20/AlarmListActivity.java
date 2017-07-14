@@ -57,6 +57,7 @@ public class AlarmListActivity extends AppCompatActivity {
             int toLoadSize = alarmDatabase.getInt("arraySize", 0);
             for (int i = 0; i < toLoadSize; i++) {
                 Alarm toAdd = new Alarm();
+                toAdd.setMasterID(alarmDatabase.getString(i + "masterID", null));
                 toAdd.setLabel(alarmDatabase.getString(i + "label", null));
                 toAdd.setFromHour(alarmDatabase.getInt(i + "fromHour", 7));
                 toAdd.setFromMinute(alarmDatabase.getInt(i + "fromMinute", 20));
@@ -89,12 +90,12 @@ public class AlarmListActivity extends AppCompatActivity {
 
                 // Creating and sending new alarm to edit activity
                 Alarm toSend = new Alarm();
+                toSend.setNewMasterID();
                 for (int i = 0; i < 3; i++) {
                     toSend.addAlarmName(Alarm.getDefaultName(AlarmListActivity.this));
                     toSend.addAlarmUri(Alarm.getDefaultUri());
                     toSend.addAlarmVibrate(false);
                 }
-                Log.i("Info", "New alarm created");
                 Intent i = EditAlarmActivity.newIntent(AlarmListActivity.this, toSend);
                 startActivityForResult(i, EXTRA_REQUEST_NEW_ALARM);
             }
@@ -116,6 +117,7 @@ public class AlarmListActivity extends AppCompatActivity {
         databaseEditor.putInt("arraySize", mAlarms.size());
         for (int i = 0; i < mAlarms.size(); i++) {
             Alarm toSave = mAlarms.get(i);
+            databaseEditor.putString(i + "masterID", toSave.getMasterID());
             databaseEditor.putString(i + "label", toSave.getLabel());
             databaseEditor.putInt(i + "fromHour", toSave.getFromHour());
             databaseEditor.putInt(i + "fromMinute", toSave.getFromMinute());
