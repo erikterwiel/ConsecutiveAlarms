@@ -6,6 +6,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -64,10 +68,21 @@ public class AlarmAlertService extends Service {
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(888, alarmNotification);
 
+        // Plays selected alarm tone
+        try {
+            MediaPlayer tonePlayer = new MediaPlayer();
+            tonePlayer.setDataSource(this, Uri.parse(intent.getStringExtra("alarmTone")));
+            tonePlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            tonePlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build());
+            tonePlayer.prepare();
+            tonePlayer.start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return super.onStartCommand(intent, flags, startId);
-
-//                .addAction(new Notification.Action.Builder(
-  //                      R.drawable.ic_alarm_off_black_48dp, "Dismiss", ))
     }
 
     @Override
