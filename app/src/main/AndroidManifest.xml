@@ -38,6 +38,12 @@
         <receiver
             android:name=".AlarmReceiver"/>
 
+        <receiver
+            android:name=".AlarmFinishReceiver"/>
+
+        <service
+            android:name=".AlarmAlertService"/>
+
     </application>
 
 </manifest>

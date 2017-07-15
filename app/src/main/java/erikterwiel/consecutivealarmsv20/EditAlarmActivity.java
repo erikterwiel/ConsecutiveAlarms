@@ -47,14 +47,14 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
     private static final int EXTRA_RINGTONE_PICKER_ID = 997;
     private static final int EXTRA_MASTER_RINGTONE_PICKER_ID = 995;
 
-    // Lists functionality variables
+    // Declares functionality variables
     private Alarm mAlarm;
     private AlarmAdapter mAlarmAdapter;
     private boolean mIsFrom;
     private int mPosition;
 
 
-    // Lists GUI variables
+    // Declares GUI variables
     private MenuItem mDoneButton;
     private LinearLayout mLabelLayout;
     private TextView mLabel;

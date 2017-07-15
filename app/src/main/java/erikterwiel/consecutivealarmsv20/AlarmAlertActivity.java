@@ -3,13 +3,10 @@ package erikterwiel.consecutivealarmsv20;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -19,7 +16,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -59,9 +55,8 @@ public class AlarmAlertActivity extends Activity {
         alarmTime.setText(currentTime.getTime());
         alarmAM.setText(currentTime.getMorning());
         String label = getIntent().getStringExtra("alarmLabel");
-        if (label == null) {
-            alarmLabel.setText(R.string.alarm);
-        } else alarmLabel.setText(label);
+        if (label == null) label = "Alarm";
+        alarmLabel.setText(label);
 
         // Sets gap between alarm name and swipe bar based on screen height
         Display display = getWindowManager().getDefaultDisplay();

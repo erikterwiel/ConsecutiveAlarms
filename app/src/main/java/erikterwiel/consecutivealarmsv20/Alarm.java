@@ -22,7 +22,7 @@ import java.util.UUID;
 
 public class Alarm implements Serializable {
 
-    // Lists object variables
+    // Declares object variables
     private String mMasterID;
     private String mLabel;
     private int mFromHour;

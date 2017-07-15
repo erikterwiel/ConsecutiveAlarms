@@ -37,12 +37,12 @@ public class AlarmListActivity extends AppCompatActivity {
     private static final int EXTRA_REQUEST_NEW_ALARM = 999;
     private static final int EXTRA_REQUEST_EDIT_ALARM = 998;
 
-    // List functionality variables
+    // Declare functionality variables
     private List<Alarm> mAlarms = new ArrayList<Alarm>();
     private AlarmAdapter mAlarmAdapter;
     private int mAlarmSetIndex;
 
-    // List GUI variables
+    // Declare GUI variables
     private RecyclerView mAlarmList;
     private FloatingActionButton mNewAlarmButton;
 
