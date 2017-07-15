@@ -179,9 +179,9 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
                 mAlarm.resize(newVal, EditAlarmActivity.this);
                 if (oldVal < newVal) {
                     mAlarmAdapter.itemAdded(mAlarm, oldVal);
-                } else {
+                } else
                     updateUI();
-                }
+                refreshMasterAlarm();
             }
         });
 
