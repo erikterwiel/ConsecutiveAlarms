@@ -147,8 +147,7 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         });
 
         // Sets up to and from times
-        updateFromTime();
-        updateToTime();
+        updateTime("both");
         mFromTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +180,7 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
                     mAlarmAdapter.itemAdded(mAlarm, oldVal);
                 } else
                     updateUI();
+                if (oldVal == 1 || newVal == 1) updateTime("from");
                 refreshMasterAlarm();
             }
         });
@@ -271,53 +271,60 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         if (mIsFrom) {
             mAlarm.setFromHour(hourOfDay);
             mAlarm.setFromMinute(minute);
-            updateFromTime();
+            updateTime("from");
         } else {
             mAlarm.setToHour(hourOfDay);
             mAlarm.setToMinute(minute);
-            updateToTime();
+            updateTime("to");
         }
     }
 
     // Updates the times when called
-    public void updateFromTime() {
+    public void updateTime(String which) {
+        if (which.equals("from")) {
+            if (mAlarm.getNumAlarms() == 1) {
+                mAlarm.setToHour(mAlarm.getFromHour());
+                mAlarm.setToMinute(mAlarm.getFromMinute());
+            } else if (mAlarm.getFromHour() > mAlarm.getToHour() ||
+                    (mAlarm.getFromHour() == mAlarm.getToHour()
+                            && mAlarm.getFromMinute() ==  mAlarm.getToMinute()) ||
+                    (mAlarm.getFromHour() == mAlarm.getToHour() &&
+                            mAlarm.getFromMinute() >= mAlarm.getToMinute())) {
+                if (mAlarm.getFromMinute() != 59) {
+                    mAlarm.setToHour(mAlarm.getFromHour());
+                    mAlarm.setToMinute(mAlarm.getFromMinute() + 1);
+                } else {
+                    mAlarm.setToHour(mAlarm.getFromHour() + 1);
+                    mAlarm.setToMinute(0);
+                }
+                mToDisplayTime = Alarm.getTime(mAlarm.getToHour(), mAlarm.getToMinute());
+                mToTime.setText(mToDisplayTime.getTime());
+                mToAM.setText(mToDisplayTime.getMorning());
+            }
+        } else if (which.equals("to")) {
+            if (mAlarm.getNumAlarms() == 1) {
+                mAlarm.setFromHour(mAlarm.getToHour());
+                mAlarm.setFromMinute(mAlarm.getToMinute());
+            } else if (mAlarm.getFromHour() > mAlarm.getToHour() ||
+                    (mAlarm.getFromHour() == mAlarm.getToHour()
+                            && mAlarm.getFromMinute() ==  mAlarm.getToMinute()) ||
+                    (mAlarm.getFromHour() == mAlarm.getToHour() &&
+                            mAlarm.getFromMinute() >= mAlarm.getToMinute())) {
+                if (mAlarm.getToMinute() != 0) {
+                    mAlarm.setFromHour(mAlarm.getToHour());
+                    mAlarm.setFromMinute(mAlarm.getToMinute() - 1);
+                } else {
+                    mAlarm.setFromHour(mAlarm.getToHour() - 1);
+                    mAlarm.setFromMinute(59);
+                }
+            }
+        }
         mFromDisplayTime = Alarm.getTime(mAlarm.getFromHour(), mAlarm.getFromMinute());
         mFromTime.setText(mFromDisplayTime.getTime());
         mFromAM.setText(mFromDisplayTime.getMorning());
-        if (mAlarm.getFromHour() > mAlarm.getToHour() ||
-                (mAlarm.getFromHour() == mAlarm.getToHour() &&
-                        mAlarm.getFromMinute() >= mAlarm.getToMinute())) {
-            if (mAlarm.getFromMinute() != 59) {
-                mAlarm.setToHour(mAlarm.getFromHour());
-                mAlarm.setToMinute(mAlarm.getFromMinute() + 1);
-            } else {
-                mAlarm.setToHour(mAlarm.getFromHour() + 1);
-                mAlarm.setToMinute(0);
-            }
-            mToDisplayTime = Alarm.getTime(mAlarm.getToHour(), mAlarm.getToMinute());
-            mToTime.setText(mToDisplayTime.getTime());
-            mToAM.setText(mToDisplayTime.getMorning());
-        }
-    }
-
-    public void updateToTime() {
         mToDisplayTime = Alarm.getTime(mAlarm.getToHour(), mAlarm.getToMinute());
         mToTime.setText(mToDisplayTime.getTime());
         mToAM.setText(mToDisplayTime.getMorning());
-        if (mAlarm.getFromHour() > mAlarm.getToHour() ||
-                (mAlarm.getFromHour() == mAlarm.getToHour() &&
-                        mAlarm.getFromMinute() >= mAlarm.getToMinute())) {
-            if (mAlarm.getToMinute() != 0) {
-                mAlarm.setFromHour(mAlarm.getToHour());
-                mAlarm.setFromMinute(mAlarm.getToMinute() - 1);
-            } else {
-                mAlarm.setFromHour(mAlarm.getToHour() - 1);
-                mAlarm.setFromMinute(59);
-            }
-            mFromDisplayTime = Alarm.getTime(mAlarm.getFromHour(), mAlarm.getFromMinute());
-            mFromTime.setText(mFromDisplayTime.getTime());
-            mFromAM.setText(mFromDisplayTime.getMorning());
-        }
     }
 
     // Refreshes master alarm picker
