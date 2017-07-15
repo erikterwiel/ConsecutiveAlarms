@@ -84,7 +84,6 @@ public class AlarmListActivity extends AppCompatActivity {
             }
         }
 
-
         // Setup for new alarm button
         mNewAlarmButton = (FloatingActionButton) findViewById(R.id.new_alarm_button);
         mNewAlarmButton.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +114,8 @@ public class AlarmListActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         Log.i("Info", "onResume() called");
+
+        // Checks if activity was started from AlertActivity and if is, activity is finished
         SharedPreferences alarmDatabase = getSharedPreferences(
                 "AlarmDatabase", Context.MODE_PRIVATE);
         if (alarmDatabase.getBoolean("killYourself", false)) {

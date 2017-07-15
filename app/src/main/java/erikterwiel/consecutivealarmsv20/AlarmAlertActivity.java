@@ -87,6 +87,11 @@ public class AlarmAlertActivity extends Activity {
                         gravityVibrator.vibrate(50);
                         gravitated = true;
                     }
+                } else {
+                    setThumbOn(seekBar);
+                    if (gravitated) {
+                        gravitated = false;
+                    }
                 }
             }
 
