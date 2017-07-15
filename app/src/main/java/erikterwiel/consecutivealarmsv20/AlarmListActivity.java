@@ -3,6 +3,7 @@ package erikterwiel.consecutivealarmsv20;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.LocaleList;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,9 +21,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class AlarmListActivity extends AppCompatActivity {
 
@@ -46,9 +49,16 @@ public class AlarmListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_list);
         Log.i("Info", "onCreate() called");
 
-        // Loads saved alarms
+        // Clears alarms if had from previous version
         SharedPreferences alarmDatabase = getSharedPreferences(
                 "AlarmDatabase", Context.MODE_PRIVATE);
+        if (!alarmDatabase.contains("loadedBefore")) {
+            SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
+            databaseEditor.clear();
+            databaseEditor.apply();
+        }
+
+        // Loads saved alarms
         if (alarmDatabase.contains("arraySize")) {
             int toLoadSize = alarmDatabase.getInt("arraySize", 0);
             for (int i = 0; i < toLoadSize; i++) {
@@ -129,6 +139,7 @@ public class AlarmListActivity extends AppCompatActivity {
         SharedPreferences alarmDatabase = getSharedPreferences(
                 "AlarmDatabase", Context.MODE_PRIVATE);
         SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
+        databaseEditor.putBoolean("loadedBefore", true);
         databaseEditor.putBoolean("killYourself", false);
         databaseEditor.putInt("arraySize", mAlarms.size());
         for (int i = 0; i < mAlarms.size(); i++) {
@@ -184,8 +195,37 @@ public class AlarmListActivity extends AppCompatActivity {
 
     // Called when alarm is set
     public void notifyAlarmSet(Alarm alarm) {
-        Snackbar.make(mAlarmList, "An alarm has been set lol not really",
-                Snackbar.LENGTH_LONG).show();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, alarm.getFromHour());
+        calendar.set(Calendar.MINUTE, alarm.getFromMinute());
+        if (System.currentTimeMillis() > calendar.getTimeInMillis())
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        int timeFromNowMillis = (int) (calendar.getTimeInMillis() - System.currentTimeMillis());
+        double firstRingHourDouble = timeFromNowMillis / 1000.0 / 60.0 / 60.0;
+        int firstRingHour =  timeFromNowMillis / 1000 / 60 / 60;
+        int firstRingMinute = (int) ((firstRingHourDouble - ((double) firstRingHour)) * 60) + 1;
+        Log.i("Info", "first ring minute: " +  firstRingMinute);
+        if (firstRingHour == 0) {
+            if (firstRingMinute == 1) {
+                Snackbar.make(mAlarmList, "First ring set for less than a minute from now.", Snackbar.LENGTH_LONG).show();
+            } else
+                Snackbar.make(mAlarmList, String.format(new Locale("en"), "First ring set for %d minutes from now.", firstRingMinute), Snackbar.LENGTH_LONG).show();
+        } else if (firstRingHour == 1) {
+            if (firstRingMinute == 1) {
+                Snackbar.make(mAlarmList, "First ring set for 1 hour and 1 minute from now.", Snackbar.LENGTH_LONG).show();
+            } else if (firstRingMinute == 0){
+                Snackbar.make(mAlarmList, "First ring set for 1 hour from now.", Snackbar.LENGTH_LONG).show();
+            } else
+                Snackbar.make(mAlarmList, String.format(new Locale("en"), "First ring set for 1 hour and %d minutes from now.", firstRingMinute), Snackbar.LENGTH_LONG).show();
+        } else {
+            if (firstRingMinute == 1) {
+                Snackbar.make(mAlarmList, String.format(new Locale("en"), "First ring set for %d hours and 1 minute from now.", firstRingHour), Snackbar.LENGTH_LONG).show();
+            } else if (firstRingMinute == 0) {
+                Snackbar.make(mAlarmList, String.format(new Locale("en"), "First ring set for %d hours from now.", firstRingHour), Snackbar.LENGTH_LONG).show();
+            } else
+                Snackbar.make(mAlarmList, String.format(new Locale("en"), "First ring set for %d hours and %d minutes from now.", firstRingHour, firstRingMinute), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     // Called whenever UI is changed
