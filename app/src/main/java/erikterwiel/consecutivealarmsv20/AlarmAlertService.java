@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 
 import java.util.Calendar;
@@ -20,6 +21,10 @@ import java.util.Calendar;
  */
 
 public class AlarmAlertService extends Service {
+    private NotificationManager mNotificationManager;
+    private MediaPlayer mTonePlayer;
+    private Vibrator mVibrator;
+    private long[] mPattern = {0, 1000, 1000};
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -64,30 +69,40 @@ public class AlarmAlertService extends Service {
 
         // Displays notification
         Notification alarmNotification = notificationBuilder.build();
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(888, alarmNotification);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager.notify(888, alarmNotification);
 
         // Plays selected alarm tone
         try {
-            MediaPlayer tonePlayer = new MediaPlayer();
-            tonePlayer.setDataSource(this, Uri.parse(intent.getStringExtra("alarmTone")));
-            tonePlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-            tonePlayer.setAudioAttributes(new AudioAttributes.Builder()
+            mTonePlayer = new MediaPlayer();
+            mTonePlayer.setDataSource(this, Uri.parse(intent.getStringExtra("alarmTone")));
+            mTonePlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            mTonePlayer.setAudioAttributes(new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build());
-            tonePlayer.prepare();
-            tonePlayer.start();
+            mTonePlayer.prepare();
+            mTonePlayer.start();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        // Vibrates if user selected vibrate
+        if (intent.getBooleanExtra("alarmVibrate", false)) {
+            mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            mVibrator.vibrate(mPattern, 0);
+        }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mNotificationManager.cancel(888);
+        mTonePlayer.stop();
+        mTonePlayer.release();
+        mVibrator.cancel();
     }
 
     @Nullable
