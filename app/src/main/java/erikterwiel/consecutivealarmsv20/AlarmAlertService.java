@@ -34,6 +34,7 @@ public class AlarmAlertService extends Service {
         Intent activityIntent = new Intent(this, AlarmAlertActivity.class);
         activityIntent.putExtra("alarmLabel", intent.getStringExtra("alarmLabel"));
         activityIntent.putExtra("masterID", intent.getStringExtra("masterID"));
+        activityIntent.putExtra("killModify", false);
         PendingIntent pendingActivityIntent = PendingIntent.getActivity(
                 this, 777, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -103,7 +104,7 @@ public class AlarmAlertService extends Service {
         mNotificationManager.cancel(888);
         mTonePlayer.stop();
         mTonePlayer.release();
-        mVibrator.cancel();
+        if (mVibrator != null) mVibrator.cancel();
     }
 
     @Nullable

@@ -28,6 +28,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
         if (keyguardManager.inKeyguardRestrictedInputMode()) {
             Intent activityIntent = new Intent(context, AlarmAlertActivity.class);
+            activityIntent.putExtra("masterID", intent.getStringExtra("masterID"));
             activityIntent.putExtra("alarmLabel", intent.getStringExtra("alarmLabel"));
             context.startActivity(activityIntent);
         }

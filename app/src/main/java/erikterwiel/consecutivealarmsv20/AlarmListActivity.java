@@ -112,12 +112,27 @@ public class AlarmListActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("Info", "onResume() called");
+        SharedPreferences alarmDatabase = getSharedPreferences(
+                "AlarmDatabase", Context.MODE_PRIVATE);
+        if (alarmDatabase.getBoolean("killYourself", false)) {
+            SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
+            databaseEditor.putBoolean("killYourself", false);
+            databaseEditor.apply();
+            finish();
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         Log.i("Info", "onStop() called");
         SharedPreferences alarmDatabase = getSharedPreferences(
                 "AlarmDatabase", Context.MODE_PRIVATE);
         SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
+        databaseEditor.putBoolean("killYourself", false);
         databaseEditor.putInt("arraySize", mAlarms.size());
         for (int i = 0; i < mAlarms.size(); i++) {
             Alarm toSave = mAlarms.get(i);
@@ -225,7 +240,7 @@ public class AlarmListActivity extends AppCompatActivity {
                 mAlarmAdapter.notifyItemInserted(position);
                 mAlarmList.scrollToPosition(position);
                 if (wasOn) {
-                    mAlarms.get(position).setAlarm(AlarmListActivity.this);
+                    mAlarms.get(position).setAlarm(AlarmListActivity.this, false);
                     notifyAlarmSet(mAlarms.get(position));
                 }
                 updateNoAlarmText();
@@ -315,7 +330,7 @@ public class AlarmListActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked && !mAlarm.isOn()) {
-                        mAlarm.setAlarm(AlarmListActivity.this);
+                        mAlarm.setAlarm(AlarmListActivity.this, false);
                         notifyAlarmSet(mAlarm);
                     } else if (!isChecked && mAlarm.isOn()) {
                         mAlarm.cancelAlarm(AlarmListActivity.this);

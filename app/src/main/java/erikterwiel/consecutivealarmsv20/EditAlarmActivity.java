@@ -254,7 +254,7 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
             public boolean onMenuItemClick(MenuItem item) {
                 if (mAlarm.isOn()) mAlarm.cancelAlarm(EditAlarmActivity.this);
                 for (int i = 0; i < mAlarm.getNumAlarms(); i++) mAlarm.addNewAlarmID();
-                mAlarm.setAlarm(EditAlarmActivity.this);
+                mAlarm.setAlarm(EditAlarmActivity.this, false);
                 Intent i = new Intent();
                 i.putExtra(EXTRA_ALARM_FROM, mAlarm);
                 setResult(RESULT_OK, i);

@@ -66,15 +66,33 @@ public class Alarm implements Serializable {
     }
 
     // Sets alarm
-    public void setAlarm(Context context) {
+    public void setAlarm(Context context, boolean repeatingCall) {
 
         // Calculates the interval in milliseconds
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.HOUR_OF_DAY, mFromHour);
         calendar.set(Calendar.MINUTE, mFromMinute);
-        if (System.currentTimeMillis() > calendar.getTimeInMillis())
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        // Finds which day is repeating
+        if (repeatingCall) {
+            boolean foundDay = false;
+            while (!foundDay) {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                int day = calendar.get(Calendar.DAY_OF_WEEK);
+                if (day == Calendar.SUNDAY && isSunday()) foundDay = true;
+                if (day == Calendar.MONDAY && isMonday()) foundDay = true;
+                if (day == Calendar.TUESDAY && isTuesday()) foundDay = true;
+                if (day == Calendar.WEDNESDAY && isWednesday()) foundDay = true;
+                if (day == Calendar.THURSDAY && isThursday()) foundDay = true;
+                if (day == Calendar.FRIDAY && isFriday()) foundDay = true;
+                if (day == Calendar.SATURDAY && isSaturday()) foundDay = true;
+            }
+        } else {
+            if (System.currentTimeMillis() > calendar.getTimeInMillis())
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
         long fromMillis = calendar.getTimeInMillis();
         calendar.set(Calendar.HOUR_OF_DAY, mToHour);
         calendar.set(Calendar.MINUTE, mToMinute);
@@ -90,6 +108,8 @@ public class Alarm implements Serializable {
             PendingIntent pendingAppIntent = PendingIntent.getActivity(context, 0, appIntent, 0);
             AlarmManager.AlarmClockInfo alarmInfo =
                     new AlarmManager.AlarmClockInfo(fromMillis + (i * interval), pendingAppIntent);
+            Log.i("Info", "Alarm set for " + (fromMillis + (i * interval)
+                    - System.currentTimeMillis()) + " millis from now");
 
             // Creates intent that actually sets the alarm
             Intent receiverIntent = new Intent(context, AlarmReceiver.class);

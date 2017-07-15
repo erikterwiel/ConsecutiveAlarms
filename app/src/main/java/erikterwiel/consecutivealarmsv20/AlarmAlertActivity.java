@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -152,6 +153,13 @@ public class AlarmAlertActivity extends Activity {
         Intent receiverIntent = new Intent(this, AlarmFinishReceiver.class);
         receiverIntent.putExtra("masterID", getIntent().getStringExtra("masterID"));
         sendBroadcast(receiverIntent);
+        if (getIntent().getBooleanExtra("killModify", true)) {
+            SharedPreferences alarmDatabase =
+                    getSharedPreferences("AlarmDatabase", Context.MODE_PRIVATE);
+            SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
+            databaseEditor.putBoolean("killYourself", true);
+            databaseEditor.apply();
+        }
         finish();
     }
 }
