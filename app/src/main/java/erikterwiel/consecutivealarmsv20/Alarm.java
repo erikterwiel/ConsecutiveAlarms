@@ -55,6 +55,7 @@ public class Alarm implements Serializable {
         mAlarmNames = new ArrayList<String>();
         mAlarmUris = new ArrayList<String>();
         mAlarmVibrate = new ArrayList<Boolean>();
+        mOn = false;
         mSunday = false;
         mMonday = false;
         mTuesday = false;
@@ -62,7 +63,6 @@ public class Alarm implements Serializable {
         mThursday = false;
         mFriday = false;
         mSaturday = false;
-        mOn = false;
     }
 
     // Sets alarm

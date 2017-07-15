@@ -11,6 +11,8 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 public class AlarmFinishReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        Intent serviceIntent = new Intent(context, AlarmAlertService.class);
+        context.stopService(serviceIntent);
 
     }
 }

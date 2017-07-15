@@ -24,7 +24,7 @@ public class AlarmAlertService extends Service {
     private NotificationManager mNotificationManager;
     private MediaPlayer mTonePlayer;
     private Vibrator mVibrator;
-    private long[] mPattern = {0, 1000, 1000};
+    private long[] mPattern = {0, 625, 625};
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -33,12 +33,13 @@ public class AlarmAlertService extends Service {
         // PendingIntent for AlarmAlertActivity
         Intent activityIntent = new Intent(this, AlarmAlertActivity.class);
         activityIntent.putExtra("alarmLabel", intent.getStringExtra("alarmLabel"));
+        activityIntent.putExtra("masterID", intent.getStringExtra("masterID"));
         PendingIntent pendingActivityIntent = PendingIntent.getActivity(
                 this, 777, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // PendingIntent for AlarmFinishReceiver
         Intent receiverIntent = new Intent(this, AlarmFinishReceiver.class);
-        activityIntent.putExtra("masterID", intent.getStringExtra("masterID"));
+        receiverIntent.putExtra("masterID", intent.getStringExtra("masterID"));
         PendingIntent pendingReceiverIntent = PendingIntent.getBroadcast(
                 this, 777, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -56,7 +57,7 @@ public class AlarmAlertService extends Service {
                 .setContentText(currentTime.getTime() + currentTime.getMorning())
                 .setCategory(Notification.CATEGORY_ALARM)
                 .setPriority(Notification.PRIORITY_MAX)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .addAction(new Notification.Action.Builder(
                         R.drawable.ic_alarm_off_black_48dp, "Dismiss", pendingReceiverIntent)
                         .build());

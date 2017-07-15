@@ -2,7 +2,9 @@ package erikterwiel.consecutivealarmsv20;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -99,12 +101,14 @@ public class AlarmAlertActivity extends Activity {
                         gravityVibrator.vibrate(50);
                         gravitated = true;
                     }
+                    turnOffAlarm();
                 } else if (seekBar.getProgress() > 80) {
                     animate(seekBar, 97, 175);
                     if (!gravitated) {
                         gravityVibrator.vibrate(50);
                         gravitated = true;
                     }
+                    turnOffAlarm();
                 } else animate(seekBar, 50, 250);
             }
         });
@@ -141,5 +145,13 @@ public class AlarmAlertActivity extends Activity {
         animation.setDuration(speed);
         animation.setInterpolator(new OvershootInterpolator());
         animation.start();
+    }
+
+    // Called when alarm is turned off
+    private void turnOffAlarm() {
+        Intent receiverIntent = new Intent(this, AlarmFinishReceiver.class);
+        receiverIntent.putExtra("masterID", getIntent().getStringExtra("masterID"));
+        sendBroadcast(receiverIntent);
+        finish();
     }
 }
