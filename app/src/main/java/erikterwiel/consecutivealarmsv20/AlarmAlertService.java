@@ -98,6 +98,7 @@ public class AlarmAlertService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    // Stops all processes involving the service
     @Override
     public void onDestroy() {
         super.onDestroy();

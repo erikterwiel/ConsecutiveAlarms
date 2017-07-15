@@ -3,11 +3,8 @@ package erikterwiel.consecutivealarmsv20;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,13 +19,10 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class AlarmListActivity extends AppCompatActivity {
 
@@ -106,8 +100,6 @@ public class AlarmListActivity extends AppCompatActivity {
         // Setup for alarm list RecyclerView
         mAlarmList = (RecyclerView) findViewById(R.id.alarm_list);
         mAlarmList.setLayoutManager(new LinearLayoutManager(this));
-        updateUI();
-        updateNoAlarmText();
     }
 
     @Override
@@ -124,12 +116,16 @@ public class AlarmListActivity extends AppCompatActivity {
             databaseEditor.apply();
             finish();
         }
+        updateUI();
+        updateNoAlarmText();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.i("Info", "onStop() called");
+
+        // Saves alarms when activity is stopped
         SharedPreferences alarmDatabase = getSharedPreferences(
                 "AlarmDatabase", Context.MODE_PRIVATE);
         SharedPreferences.Editor databaseEditor = alarmDatabase.edit();
@@ -162,6 +158,7 @@ public class AlarmListActivity extends AppCompatActivity {
         databaseEditor.apply();
     }
 
+    // Adds new alarm to array or edits existing alarm
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

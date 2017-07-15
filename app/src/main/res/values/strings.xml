@@ -1,11 +1,8 @@
 <resources>
-    <string name="app_name">Consecutive Alarms v2.0</string>
-    <string name="time_am">AM</string>
-    <string name="time_pm">PM</string>
+    <string name="app_name">Consecutive Alarms</string>
     <string name="alarms">Alarms</string>
     <string name="alarm_list_vibrate">Vibrate</string>
     <string name="edit_alarm_activity_label">Edit Alarm</string>
     <string name="set_master_alarm">Set Master Ringtone</string>
     <string name="no_alarm_warning">Press The Button Below To Create An Alarm</string>
-    <string name="alarm">Alarm</string>
 </resources>

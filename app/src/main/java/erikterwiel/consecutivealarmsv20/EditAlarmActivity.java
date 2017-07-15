@@ -29,9 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -244,6 +241,7 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         updateUI();
     }
 
+    // Sets up done button
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = getMenuInflater();

@@ -1,7 +1,5 @@
 package erikterwiel.consecutivealarmsv20;
 
-import android.util.Log;
-
 /**
  * Created by Erik on 6/22/2017.
  */

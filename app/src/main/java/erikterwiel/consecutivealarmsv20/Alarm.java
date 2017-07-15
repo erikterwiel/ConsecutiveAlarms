@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.provider.Settings;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import java.io.Serializable;
