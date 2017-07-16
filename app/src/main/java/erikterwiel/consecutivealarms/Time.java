@@ -1,4 +1,4 @@
-package erikterwiel.consecutivealarmsv20;
+package erikterwiel.consecutivealarms;
 
 /**
  * Created by Erik on 6/22/2017.

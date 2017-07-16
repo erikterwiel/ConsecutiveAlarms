@@ -1,9 +1,8 @@
-package erikterwiel.consecutivealarmsv20;
+package erikterwiel.consecutivealarms;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.LocaleList;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;

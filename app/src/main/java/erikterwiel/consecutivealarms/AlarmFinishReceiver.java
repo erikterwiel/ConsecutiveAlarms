@@ -1,4 +1,4 @@
-package erikterwiel.consecutivealarmsv20;
+package erikterwiel.consecutivealarms;
 
 import android.content.Context;
 import android.content.Intent;
