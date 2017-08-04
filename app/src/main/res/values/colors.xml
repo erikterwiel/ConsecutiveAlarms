@@ -5,10 +5,10 @@
     <color name="colorAccent">#FF4081</color>
     <color name="consec_alarm_accent">#b71c1c</color>
     <color name="accent_material_dark_1">#80cbc4</color>
-    <color name="ca_primary">#263238</color>
-    <color name="ca_background">#263238</color>
-    <color name="ca_accent">#f44336</color>
-    <color name="ca_navbar">#000000</color>
-    <color name="ca_statusbar">#000000</color>
+    <color name="ca_primary">#151b1e</color>
+    <color name="ca_background">#151b1e</color>
+    <color name="ca_accent">#5e97f6</color>
+    <color name="ca_navbar">#0d1012</color>
+    <color name="ca_statusbar">#0d1012</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
