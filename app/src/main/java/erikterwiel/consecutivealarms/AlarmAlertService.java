@@ -59,6 +59,7 @@ public class AlarmAlertService extends Service {
                 .setCategory(Notification.CATEGORY_ALARM)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setAutoCancel(false)
+                .setOngoing(true)
                 .addAction(new Notification.Action.Builder(
                         R.drawable.ic_alarm_off_black_48dp, "Dismiss", pendingReceiverIntent)
                         .build());
