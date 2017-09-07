@@ -118,6 +118,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
+                android:id="@+id/edit_sun_letter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -125,6 +126,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:text="S"/>
             <TextView
+                android:id="@+id/edit_mon_letter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -132,6 +134,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:text="M"/>
             <TextView
+                android:id="@+id/edit_tue_letter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -139,6 +142,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:text="T"/>
             <TextView
+                android:id="@+id/edit_wed_letter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -146,6 +150,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:text="W"/>
             <TextView
+                android:id="@+id/edit_thu_letter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -153,6 +158,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:text="T"/>
             <TextView
+                android:id="@+id/edit_fri_letter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -160,6 +166,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:text="F"/>
             <TextView
+                android:id="@+id/edit_sat_letter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

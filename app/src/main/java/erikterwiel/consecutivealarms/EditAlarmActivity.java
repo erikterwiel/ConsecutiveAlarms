@@ -30,6 +30,8 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -62,6 +64,13 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
     private TextView mToAM;
     private Time mToDisplayTime;
     private NumberPicker mAlarmPicker;
+    private TextView mSunLetter;
+    private TextView mMonLetter;
+    private TextView mTueLetter;
+    private TextView mWedLetter;
+    private TextView mThuLetter;
+    private TextView mFriLetter;
+    private TextView mSatLetter;
     private CheckBox mSunday;
     private CheckBox mMonday;
     private CheckBox mTuesday;
@@ -89,6 +98,13 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         mToTime = (TextView) findViewById(R.id.edit_to_time);
         mToAM = (TextView) findViewById(R.id.edit_to_am);
         mAlarmPicker = (NumberPicker) findViewById(R.id.edit_alarm_picker);
+        mSunLetter = (TextView) findViewById(R.id.edit_sun_letter);
+        mMonLetter = (TextView) findViewById(R.id.edit_mon_letter);
+        mTueLetter = (TextView) findViewById(R.id.edit_tue_letter);
+        mWedLetter = (TextView) findViewById(R.id.edit_wed_letter);
+        mThuLetter = (TextView) findViewById(R.id.edit_thu_letter);
+        mFriLetter = (TextView) findViewById(R.id.edit_fri_letter);
+        mSatLetter = (TextView) findViewById(R.id.edit_sat_letter);
         mSunday = (CheckBox) findViewById(R.id.list_item_sunday);
         mMonday = (CheckBox) findViewById(R.id.list_item_monday);
         mTuesday = (CheckBox) findViewById(R.id.list_item_tuesday);
@@ -190,6 +206,48 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         if (mAlarm.isThursday()) mThursday.setChecked(true);
         if (mAlarm.isFriday()) mFriday.setChecked(true);
         if (mAlarm.isSaturday()) mSaturday.setChecked(true);
+        mSunLetter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSunday.setChecked(!mAlarm.isSunday());
+            }
+        });
+        mMonLetter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMonday.setChecked(!mAlarm.isMonday());
+            }
+        });
+        mTueLetter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTuesday.setChecked(!mAlarm.isTuesday());
+            }
+        });
+        mWedLetter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWednesday.setChecked(!mAlarm.isWednesday());
+            }
+        });
+        mThuLetter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mThursday.setChecked(!mAlarm.isThursday());
+            }
+        });
+        mFriLetter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFriday.setChecked(!mAlarm.isFriday());
+            }
+        });
+        mSatLetter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSaturday.setChecked(!mAlarm.isSaturday());
+            }
+        });
         mSunday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
