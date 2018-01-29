@@ -29,6 +29,7 @@ public class Alarm implements Serializable {
     private int mToHour;
     private int mToMinute;
     private int mNumAlarms;
+    private int mNumAlarmsOld;
     private List<Integer> mAlarmIDs;
     private List<String> mAlarmNames;
     private List<String> mAlarmUris;
@@ -50,6 +51,7 @@ public class Alarm implements Serializable {
         mToHour = 7;
         mToMinute = 30;
         mNumAlarms = 3;
+        mNumAlarmsOld = 0;
         mAlarmIDs = new ArrayList<Integer>();
         mAlarmNames = new ArrayList<String>();
         mAlarmUris = new ArrayList<String>();
@@ -132,6 +134,17 @@ public class Alarm implements Serializable {
                     context, getAlarmID(i), appIntent, PendingIntent.FLAG_UPDATE_CURRENT));
         setOn(false);
     }
+
+    // Cancels alarm
+    public void cancelAlarmOld(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent appIntent = new Intent(context, AlarmReceiver.class);
+        for (int i = 0; i < mNumAlarmsOld; i++)
+            alarmManager.cancel(PendingIntent.getBroadcast(
+                    context, getAlarmID(i), appIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        setOn(false);
+    }
+
 
     // Changes array to whatever size provided
     public void resize(int newSize, Context context) {
@@ -353,6 +366,14 @@ public class Alarm implements Serializable {
     public void setNumAlarms(int numAlarms) {
         mNumAlarms = numAlarms;
         Log.i("Info", "Number of alarms set to " + Integer.toString(numAlarms));
+    }
+
+    public int getNumAlarmsOld() {
+        return mNumAlarmsOld;
+    }
+
+    public void setNumAlarmsOld(int numAlarmsOld) {
+        mNumAlarmsOld = numAlarmsOld;
     }
 
     public boolean isSunday() {

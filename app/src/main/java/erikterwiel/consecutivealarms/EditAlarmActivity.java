@@ -117,6 +117,9 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         mMasterAlarmNameView  = (TextView) findViewById(R.id.alarm_master_ringname);
         mAlarmList = (RecyclerView) findViewById(R.id.alarms_recycler_view);
 
+        // Sets old alarm value before changes
+        mAlarm.setNumAlarmsOld(mAlarm.getNumAlarms());
+
         // Sets up label
         mLabel.setText(mAlarm.getLabel());
         mLabelLayout.setOnClickListener(new View.OnClickListener() {
@@ -308,7 +311,7 @@ public class EditAlarmActivity extends AppCompatActivity implements TimePickerDi
         mDoneButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mAlarm.isOn()) mAlarm.cancelAlarm(EditAlarmActivity.this);
+                if (mAlarm.isOn()) mAlarm.cancelAlarmOld(EditAlarmActivity.this);
                 for (int i = 0; i < mAlarm.getNumAlarms(); i++) mAlarm.addNewAlarmID();
                 mAlarm.setAlarm(EditAlarmActivity.this, false);
                 Intent i = new Intent();
