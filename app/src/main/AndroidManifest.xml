@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="erikterwiel.consecutivealarms">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="erikterwiel.consecutivealarms">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -16,7 +17,8 @@
         <activity
             android:name="erikterwiel.consecutivealarms.AlarmListActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/splash_screen">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"/>

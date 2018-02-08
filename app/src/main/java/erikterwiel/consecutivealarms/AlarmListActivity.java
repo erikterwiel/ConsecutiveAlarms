@@ -44,9 +44,10 @@ public class AlarmListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("Info", "onCreate() called");
+        setTheme(R.style.Theme_ConsecutiveAlarms);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_list);
-        Log.i("Info", "onCreate() called");
 
         // Clears alarms if had from previous version
         SharedPreferences alarmDatabase = getSharedPreferences(
