@@ -1,3 +1,12 @@
+package erikterwiel.consecutivealarms;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+
+import java.util.ArrayList;
+
 public class BootFinishReceiver extends BroadcastReceiver {
 
     @Override
@@ -5,7 +14,7 @@ public class BootFinishReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 
             ArrayList<Alarm> alarmList = new ArrayList<>();
-            SharedPreferences alarmDatabase = getSharedPreferences(
+            SharedPreferences alarmDatabase = context.getSharedPreferences(
                     "AlarmDatabase", Context.MODE_PRIVATE);
             if (alarmDatabase.contains("arraySize")) {
                 int toLoadSize = alarmDatabase.getInt("arraySize", 0);
